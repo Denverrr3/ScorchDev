@@ -14,13 +14,11 @@ $GlobalVars = Get-BatchAutomationVariable -Prefix 'Global' `
                                           -Name 'AutomationAccountName',
                                                 'SubscriptionName',
                                                 'SubscriptionAccessCredentialName',
-                                                'RunbookWorkerAccessCredentialName',
                                                 'ResourceGroupName',
                                                 'Tenant',
                                                 'StorageAccountName'
 
 $SubscriptionAccessCredential = Get-AutomationPSCredential -Name $GlobalVars.SubscriptionAccessCredentialName
-$RunbookWorkerAccessCredential = Get-AutomationPSCredential -Name $GlobalVars.RunbookWorkerAccessCredentialName
         
 Try
 {
@@ -30,7 +28,6 @@ Try
     $UpdatedRepositoryInformation = Sync-GitRepositoryToAzureAutomation -AutomationAccountName $GlobalVars.AutomationAccountName `
                                                                         -SubscriptionName $GlobalVars.SubscriptionName `
                                                                         -SubscriptionAccessCredential $SubscriptionAccessCredential `
-                                                                        -RunbookWorkerAccessCredenial $RunbookWorkerAccessCredential `
                                                                         -RepositoryInformationJSON $RepositoryInformationJSON `
                                                                         -ResourceGroupName $GlobalVars.ResourceGroupName `
                                                                         -Tenant $GlobalVars.Tenant `

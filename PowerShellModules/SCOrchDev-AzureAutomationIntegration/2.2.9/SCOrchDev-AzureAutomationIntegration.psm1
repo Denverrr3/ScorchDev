@@ -924,10 +924,6 @@ Function Sync-GitRepositoryToAzureAutomation
         [Parameter(Mandatory = $True)]
         [pscredential]
         $SubscriptionAccessCredential,
-
-        [Parameter(Mandatory = $True)]
-        [pscredential]
-        $RunbookWorkerAccessCredenial,
         
         [Parameter(Mandatory = $True)]
         [string]
@@ -965,7 +961,6 @@ Function Sync-GitRepositoryToAzureAutomation
                                                                                    -RepositoryName $RepositoryName `
                                                                                    -RepositoryInformationJSON $RepositoryInformationJSON `
                                                                                    -SubscriptionAccessCredential $SubscriptionAccessCredential `
-                                                                                   -RunbookWorkerAccessCredenial $RunbookWorkerAccessCredenial `
                                                                                    -AutomationAccountName $AutomationAccountName `
                                                                                    -SubscriptionName $SubscriptionName `
                                                                                    -ResourceGroupName $ResourceGroupName `
@@ -984,10 +979,6 @@ Function Sync-IndividualGitRepositoryToAzureAutomation
         [Parameter(Mandatory = $True)]
         [pscredential]
         $SubscriptionAccessCredential,
-
-        [Parameter(Mandatory = $True)]
-        [pscredential]
-        $RunbookWorkerAccessCredenial,
         
         [Parameter(Mandatory = $True)]
         $RepositoryInformation,
@@ -1028,14 +1019,11 @@ Function Sync-IndividualGitRepositoryToAzureAutomation
     {
         $RunbookWorker = Get-AzureAutomationHybridRunbookWorker -HybridWorkerGroup $RepositoryInformation.HybridWorkerGroup
         # Update the repository on all Workers
-        Invoke-Command -ComputerName $RunbookWorker -Credential $RunbookWorkerAccessCredenial -ScriptBlock {
-            $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop
-                    
-            $RepositoryInformation = $Using:RepositoryInformation
-            Update-GitRepository -RepositoryPath $RepositoryInformation.RepositoryPath `
-                                    -Path $RepositoryInformation.Path `
-                                    -Branch $RepositoryInformation.Branch
-        }
+        
+        Update-GitRepository -RepositoryPath $RepositoryInformation.RepositoryPath `
+                                -Path $RepositoryInformation.Path `
+                                -Branch $RepositoryInformation.Branch
+        
         $RepositoryChange = Find-GitRepositoryChange -Path $RepositoryInformation.Path `
                                                      -StartCommit $RepositoryInformation.CurrentCommit
             
